@@ -59,13 +59,35 @@ const BookSchedule = () => {
           placeholder="Ending Date (DD/MM/YYYY)"
         />
         <br />
-        <input
-          type="endingDate"
-          name="text"
-          id=""
+        <select
+          name="event-type"
           className="p-3 w-96 border-black mb-3 rounded-full border-solid border-2"
-          placeholder="Requirements"
-        />
+        >
+          <option value="">Select Lunch Items</option>
+          <option value="1">Daal, Bhat, Mashed Potatoes</option>
+          <option value="2">Kacchi, Tehari, Murog Polao</option>
+          <option value="3">Chinese food items</option>
+        </select>
+        <br />
+        <select
+          name="event-type"
+          className="p-3 w-96 border-black mb-3 rounded-full border-solid border-2"
+        >
+          <option value="">Select Cold Drinks</option>
+          <option value="1">Coke</option>
+          <option value="2">Mojo</option>
+          <option value="3">Sprite</option>
+        </select>
+        <br />
+        <select
+          name="event-type"
+          className="p-3 w-96 border-black mb-3 rounded-full border-solid border-2"
+        >
+          <option value="">Select Sweets</option>
+          <option value="1">Rasmalai</option>
+          <option value="2">Kalojam</option>
+          <option value="3">Doi</option>
+        </select>
         <br />
         <button
           type="submit"
