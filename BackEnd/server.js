@@ -10,14 +10,15 @@ const app = express();
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/roleAuthDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mn9baty.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`)
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 // Define User schema
 const userSchema = new mongoose.Schema({
+  fullName: {type: String, required: true},
   username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, lowercase: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
   password: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
 });
@@ -45,11 +46,11 @@ const authorizeRole = (role) => (req, res, next) => {
 
 // 1. Register a user
 app.post("/register", async (req, res) => {
-  const { username, password, role } = req.body;
+  const { fullName, email, username, password, role } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword, role });
+    const newUser = new User({ fullName, email, username, password: hashedPassword, role });
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -82,13 +83,17 @@ app.post("/login", async (req, res) => {
 
 // 3. Protected route (only authenticated users can access)
 app.get("/user", authenticateToken, (req, res) => {
-  res.status(200).json({ message: `Welcome, ${req.user.username}!` });
+  res.status(200).json({ message: `Welcome, ${req.user.username}, you're logged in as an ${req.user.role}!` });
 });
 
 // 4. Admin-only route
 app.get("/admin", authenticateToken, authorizeRole("admin"), (req, res) => {
   res.status(200).json({ message: "Welcome, Admin!" });
 });
+
+app.get("/", (req, res) => {
+    res.send("Welcome to Event Booking System, IDP Lab project!")
+})
 
 // Start server
 const PORT = process.env.PORT || 3000;
