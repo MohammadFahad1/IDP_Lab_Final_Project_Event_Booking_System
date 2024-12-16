@@ -2,10 +2,10 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import NotFound from "../components/NotFound";
 import Login from "../pages/Login";
-import Signup from "../pages/signup";
 import BookSchedule from "../pages/BookSchedule";
 import Requirements from "../pages/Requirements";
 import Payment from "../pages/Payment";
+import Signup from "../pages/Signup";
 
 const router = createBrowserRouter([
   { path: "/", element: <App></App> },
