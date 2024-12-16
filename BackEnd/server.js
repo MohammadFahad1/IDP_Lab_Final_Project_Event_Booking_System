@@ -116,6 +116,11 @@ app.get("/admin", authenticateToken, authorizeRole("admin"), (req, res) => {
   res.status(200).json({ message: "Welcome, Admin!" });
 });
 
+// Check if a user is logged in
+app.get("/check-auth", authenticateToken, (req, res) => {
+  res.status(200).json({ loggedIn: true, user: req.user });
+});
+
 app.get("/", (req, res) => {
   res.send("Welcome to Event Booking System, IDP Lab project!");
 });
