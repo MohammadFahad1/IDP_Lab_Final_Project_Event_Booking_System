@@ -1,8 +1,10 @@
 import { Link } from "react-router";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import app from "../firebase/firebase_init";
+import { useState } from "react";
 
 const Login = () => {
+  const [user, setUser] = useState(null)
   const auth = getAuth(app);
 
   const provider = new GoogleAuthProvider();
@@ -11,12 +13,14 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
+        setUser(user)
         console.log(user);
       })
       .catch((error) => {
         console.log("Error:", error.message);
       });
   };
+
   const loginHandler = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -43,6 +47,15 @@ const Login = () => {
       alert("Sorry, something went wrong. Try again!", error);
     }
   };
+
+  const handleSignOut = () => {
+    signOut(auth).then(result => {
+      setUser(null)
+      console.log(result);
+    }).catch(error => {
+      console.log(error);
+    })
+  }
 
   return (
     <div className="bg-green-200 text-green-600 min-w-full min-h-[100vh]">
@@ -80,12 +93,15 @@ const Login = () => {
           Login
         </button>
       </form>
+      { user ?
+      <button className="bg-orange-700 text-white p-3" onClick={handleSignOut}>Sign Out {user?.displayName}</button>
+      :
       <div
         className="px-6 sm:px-0 max-w-48 mx-auto my-5"
-        onClick={handleGoogleSignIn}
       >
         <button
           type="button"
+          onClick={handleGoogleSignIn}
           className="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between mr-2 mb-2"
         >
           <svg
@@ -105,7 +121,14 @@ const Login = () => {
           </svg>
           Sign up with Google<div></div>
         </button>
-      </div>
+      </div> 
+
+        }
+      {user && <h1 className="text-3xl">
+        User: {user.displayName} <br />
+        Email: {user.email}
+        <img src={user.photoURL} alt="" />
+      </h1>}
       <h3 className="text-2xl font-thin text-center">
         Don&apos;t have an account?{" "}
         <Link to="/signup" className="underline">
