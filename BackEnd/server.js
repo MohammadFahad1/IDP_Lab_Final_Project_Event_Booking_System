@@ -60,7 +60,7 @@ const authorizeRole = (role) => (req, res, next) => {
 
 // 1. Register a user
 app.post("/register", async (req, res) => {
-  const { fullName, email, username, password, role } = req.body;
+  const { fullName, email, username, password } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -69,7 +69,7 @@ app.post("/register", async (req, res) => {
       email,
       username,
       password: hashedPassword,
-      role,
+      role: "user",
     });
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
@@ -82,18 +82,28 @@ app.post("/register", async (req, res) => {
 
 // 2. Login
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    const user = await User.findOne({ email });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "Email or password didn't matched!" });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ message: "Email or password didn't matched!" });
 
     const token = jwt.sign(
-      { id: user._id, username: user.username, role: user.role },
+      {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+        email: user.email,
+      },
       "secret_key",
       { expiresIn: "1h" }
     );

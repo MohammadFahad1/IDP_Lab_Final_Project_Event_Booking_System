@@ -1,16 +1,39 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router";
+import auth from "../firebase/firebase_init";
+import { useState } from "react";
 
 const Signup = () => {
+  const [regErr, setRegErr] = useState(null);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     const form = e.target;
+    setRegErr(null);
     if (form.password.value != form.confirm_password.value) {
-      alert("Sorry password didn't matched!");
+      setRegErr("Passwords dont match");
     } else {
       const fullName = form.fullName.value;
       const username = form.username.value;
       const email = form.email.value;
       const password = form.password.value;
+
+      if (
+        !fullName ||
+        !username ||
+        !email ||
+        !password ||
+        !form.confirm_password
+      ) {
+        setRegErr("All fields are required!");
+        return;
+      }
+
+      if (password.length < 6) {
+        setRegErr("Password should be at least 6 characters or longer!");
+        return;
+      }
+
       const data = {
         fullName,
         username,
@@ -19,6 +42,16 @@ const Signup = () => {
       };
 
       try {
+        // Save to firebase
+        await createUserWithEmailAndPassword(auth, email, password)
+          .then((res) => {
+            console.log(res.user);
+          })
+          .catch((err) => {
+            setRegErr(err.message);
+          });
+
+        // Save to mongodb database
         const response = await fetch("http://localhost:5100/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -27,11 +60,11 @@ const Signup = () => {
         if (response.ok) {
           alert("Registered successfully!");
         } else {
-          alert("Sorry, something went wrong. Try again!");
+          setRegErr("Mongodb Err: Sorry, something went wrong");
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("Sorry, something went wrong. Try again!", error);
+        setRegErr("Mongodb Err: Sorry, something went wrong", error);
       }
     }
   };
@@ -89,6 +122,7 @@ const Signup = () => {
           Register
         </button>
       </form>
+      <p className="text-2xl bg-red-300 text-red-800 text-center">{regErr}</p>
       <h3 className="text-2xl font-thin text-center">
         Already have an account?{" "}
         <Link to="/login" className="underline">
