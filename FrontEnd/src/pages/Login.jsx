@@ -1,16 +1,18 @@
 import { Link } from "react-router";
 import {
   GoogleAuthProvider,
-  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import auth from "../firebase/firebase_init";
+import { AuthContext } from "../AuthProvider";
 
 const Login = () => {
   const [user, setUser] = useState(null);
   const [loginErr, setLoginErr] = useState(null);
+
+  const {signInUser} = useContext(AuthContext)
 
   const provider = new GoogleAuthProvider();
 
@@ -38,7 +40,7 @@ const Login = () => {
       return;
     }
 
-    await signInWithEmailAndPassword(auth, email, password)
+    signInUser(email, password)
       .then((result) => {
         console.log(result.user);
       })
