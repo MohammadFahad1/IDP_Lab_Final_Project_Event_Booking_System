@@ -1,14 +1,26 @@
-import { createContext } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import PropTypes from "prop-types";
+import { createContext, useState } from "react";
+import auth from "./firebase/firebase_init";
 
-const AuthContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext(null);
 
-const AuthProvider = () => {
-  const authInfo = {name: 'Fahad'}
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  const createUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  const authInfo = { user, createUser };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 export default AuthProvider;
+
+AuthProvider.propTypes = {
+  children: PropTypes.node,
+};

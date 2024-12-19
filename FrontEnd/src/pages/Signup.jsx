@@ -1,10 +1,10 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router";
-import auth from "../firebase/firebase_init";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../AuthProvider";
 
 const Signup = () => {
   const [regErr, setRegErr] = useState(null);
+  const { createUser } = useContext(AuthContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -29,28 +29,31 @@ const Signup = () => {
         return;
       }
 
+      // Validate email format
+      const emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
       if (password.length < 6) {
         setRegErr("Password should be at least 6 characters or longer!");
         return;
       }
 
-      const data = {
+      /* const data = {
         fullName,
         username,
         email,
         password,
-      };
+      }; */
 
-      try {
-        // Save to firebase
-        await createUserWithEmailAndPassword(auth, email, password)
-          .then((res) => {
-            console.log(res.user);
-          })
-          .catch((err) => {
-            setRegErr(err.message);
-          });
+      // Save to firebase
+      createUser(email, password)
+        .then((result) => console.log(result))
+        .catch((error) => setRegErr(error.message));
 
+      /* try {
         // Save to mongodb database
         const response = await fetch("http://localhost:5100/register", {
           method: "POST",
@@ -65,7 +68,7 @@ const Signup = () => {
       } catch (error) {
         console.error("Error:", error);
         setRegErr("Mongodb Err: Sorry, something went wrong", error);
-      }
+      } */
     }
   };
 
