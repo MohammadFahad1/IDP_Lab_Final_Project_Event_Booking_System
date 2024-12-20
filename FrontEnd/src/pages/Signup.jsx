@@ -54,7 +54,7 @@ const Signup = () => {
         .then((result) => {
           console.log(result);
           alert("Registered successfully!");
-          navigate("/eventschedulings");
+          navigate("/eventscheduling");
         })
         .catch((error) => setRegErr(error.message));
 

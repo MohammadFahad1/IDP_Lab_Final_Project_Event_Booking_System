@@ -91,12 +91,12 @@ const BookSchedule = () => {
           <option value="3">Doi</option>
         </select>
         <br />
-        <button
-          type="submit"
+        <Link
+          to="/requirements"
           className="bg-green-600 text-white inline-block p-3 w-96 rounded-full border-solid border-2 border-green-800 hover:bg-green-900"
         >
-          <Link to="/requirements">Confirm Event</Link>
-        </button>
+          Confirm Event
+        </Link>
       </form>
     </div>
   );
