@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const BookSchedule = () => {
   return (
     <div className="bg-green-200 text-green-600 min-w-full min-h-[100vh]">
@@ -93,7 +95,7 @@ const BookSchedule = () => {
           type="submit"
           className="bg-green-600 text-white inline-block p-3 w-96 rounded-full border-solid border-2 border-green-800 hover:bg-green-900"
         >
-          Confirm Event
+          <Link to="/requirements">Confirm Event</Link>
         </button>
       </form>
     </div>

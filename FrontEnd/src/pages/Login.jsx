@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider";
 
@@ -6,6 +6,7 @@ const Login = () => {
   const [loginErr, setLoginErr] = useState(null);
 
   const { signInUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -21,6 +22,11 @@ const Login = () => {
     signInUser(email, password)
       .then((result) => {
         console.log(result.user);
+        if (result.user.email == "admin@admin.com") {
+          navigate("/admin-panel");
+        } else {
+          navigate("/eventscheduling");
+        }
       })
       .catch((error) => setLoginErr(error.message));
   };

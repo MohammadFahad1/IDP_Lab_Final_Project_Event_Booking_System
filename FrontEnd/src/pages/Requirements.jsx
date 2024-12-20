@@ -14,9 +14,8 @@ const Requirements = () => {
           </h2>
           <ul className="text-left text-2xl pb-3 leading-[2]">
             <li># Lunch (Daal, Bhat, Mashed Potatoes)</li>
-            <li># Cold Drinks (Coke, Mojo, Sprite etc)</li>
-            <li># Sweets (Rasmalai, Kalojam, Doi)</li>
-            <li># Tables & Chairs (20 x 6)</li>
+            <li># Cold Drinks (Sprite)</li>
+            <li># Sweets (Doi)</li>
           </ul>
           <h1 className="text-4xl text-orange-500 pb-3 text-left font-extrabold">
             Price: 1,25,000.00

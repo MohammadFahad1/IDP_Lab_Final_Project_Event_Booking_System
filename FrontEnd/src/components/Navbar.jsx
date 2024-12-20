@@ -24,7 +24,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Link to="/" className="text-white text-2xl font-bold">
-                Event Booking System (IDP)
+                Event Booking System
               </Link>
             </div>
 

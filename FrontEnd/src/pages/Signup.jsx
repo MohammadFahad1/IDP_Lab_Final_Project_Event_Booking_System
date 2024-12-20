@@ -1,10 +1,11 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider";
 
 const Signup = () => {
   const [regErr, setRegErr] = useState(null);
   const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -50,7 +51,11 @@ const Signup = () => {
 
       // Save to firebase
       createUser(email, password)
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          alert("Registered successfully!");
+          navigate("/eventschedulings");
+        })
         .catch((error) => setRegErr(error.message));
 
       /* try {
